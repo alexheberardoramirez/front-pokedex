@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Button, Container, Alert } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import  Home  from "./components/Home"
 import PokemonDetail from './components/PokemonDetail';
-import NavBar from './components/Navbar';
+import PokemonNavBar from './components/PokemonNavBar';
 import { PAGE } from "./constants/Constants"
 
+
   function App() {
+
 
 
   return (
@@ -15,7 +16,7 @@ import { PAGE } from "./constants/Constants"
      
       <Router>
           <section id="center">
-            <NavBar/>
+            <PokemonNavBar/>
             <Routes>
               <Route path={PAGE.HOME} element={<Home/>} />
               <Route path={`${PAGE.POKEMON}`} element={<PokemonDetail />} />

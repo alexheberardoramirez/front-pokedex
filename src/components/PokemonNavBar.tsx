@@ -1,11 +1,10 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import { PAGE } from "../constants/Constants";
 import { useNavigate } from "react-router-dom";
 
-function NavBar() {
+function PokemonNavBar() {
   const navigate = useNavigate();
 
   const handleRedirect = () => {
@@ -36,4 +35,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default PokemonNavBar;

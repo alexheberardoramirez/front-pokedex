@@ -2,11 +2,16 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import DropDown from "./DropDown";
-import { PokemonSprite } from "./PokemonSprite";
+import PokemonSprite from "./PokemonSprite";
 import { useNavigate } from "react-router-dom";
 import { PAGE } from "../constants/Constants";
+import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
 
-function PokemonCard() {
+interface CardProps {
+    pokemon: PokemonResponseDTO;
+}
+
+function PokemonCard({ pokemon }: CardProps) {
   const navigate = useNavigate();
 
   const handleRedirect = () => {
@@ -16,16 +21,15 @@ function PokemonCard() {
 
   return (
     <Card style={{ width: "18rem" }}>
-      <PokemonSprite />
+      <PokemonSprite pokemonSprites={pokemon.sprites}  pokemonName={pokemon.name}/>
       <Card.Body>
         <Card.Text>
-          A strange seed was\nplanted on its\nback at birth.\fThe plant
-          sprouts\nand grows with\nthis POKéMON.
+          {pokemon.flavorTextEntries[0].flavor_text}
         </Card.Text>
       </Card.Body>
       <ListGroup className="list-group-flush">
-        <ListGroup.Item>Category: Fire</ListGroup.Item>
-        <ListGroup.Item>Mass: 15</ListGroup.Item>
+        <ListGroup.Item>Category: </ListGroup.Item>
+        <ListGroup.Item>Mass: {pokemon.weight}</ListGroup.Item>
         <DropDown />
       </ListGroup>
       <Card.Body>

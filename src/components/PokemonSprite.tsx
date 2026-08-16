@@ -9,17 +9,22 @@ interface PokemonSprites {
   frontDefault: string;
   frontShiny: string;
 }
+interface CardProps {
+    pokemonSprites: PokemonSprites;
+    pokemonName: string;
+}
 
-export const PokemonSprite: React.FC = () => {
+  function PokemonSprite({ pokemonSprites, pokemonName }: CardProps) {
+    pokemonSprites
   const sprites: PokemonSprites = {
     backDefault:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png",
+      pokemonSprites.backDefault,
     backShiny:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png",
+      pokemonSprites.backShiny,
     frontDefault:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+      pokemonSprites.frontDefault,
     frontShiny:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png",
+      pokemonSprites.frontShiny,
   };
 
   const listaSprites: string[] = [
@@ -81,10 +86,12 @@ export const PokemonSprite: React.FC = () => {
         </div>
 
         <Card.Body className="px-1">
-          <Card.Title className="fs-5 mb-1">Bulbasaur</Card.Title>
+          <Card.Title className="fs-5 mb-1">{pokemonName}</Card.Title>
           <Card.Text className="text-muted small"></Card.Text>
         </Card.Body>
       </Card>
     </Card.Link>
   );
-};
+}
+
+export default PokemonSprite;;
