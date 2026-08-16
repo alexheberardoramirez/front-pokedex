@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import  Home  from "./components/Home"
 import PokemonDetail from './components/PokemonDetail';
+import NavBar from './components/Navbar';
 import { PAGE } from "./constants/Constants"
 
   function App() {
@@ -11,8 +12,10 @@ import { PAGE } from "./constants/Constants"
 
   return (
     <Container className="mt-5">
+     
       <Router>
           <section id="center">
+            <NavBar/>
             <Routes>
               <Route path={PAGE.HOME} element={<Home/>} />
               <Route path={`${PAGE.POKEMON}`} element={<PokemonDetail />} />
