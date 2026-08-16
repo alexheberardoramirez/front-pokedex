@@ -27,19 +27,14 @@ function PokemonDetail() {
     setPokemon(getPokemon);
   };
 
-  console.log(pokemon)
   if (Object.keys(pokemon).length === 0|| 
     
-    // Condición 2: ¿Los sprites o la URL de la imagen principal son undefined?
     !pokemon.sprites || !pokemon.sprites.frontShiny ||
     
-    // Condición 3: ¿La lista de tipos es undefined o vino vacía (longitud 0)?
     !pokemon.types || pokemon.types.length === 0 ||
     
-    // Condición 4: ¿La lista de estadísticas es undefined o vino vacía?
     !pokemon.stats || pokemon.stats.length === 0 ||
     
-    // Condición 5: ¿La lista de habilidades es undefined o vino vacía?
     !pokemon.abilities || pokemon.abilities.length === 0) {
     return (
       <Container className="text-center py-5">
@@ -48,7 +43,6 @@ function PokemonDetail() {
     );
   }
 
-  // 2. EL RETURN PRINCIPAL (Solo se ejecuta si el Pokémon NO está vacío)
   return (
     <Container className="mt-4">
       <h2 className="text-capitalize">{pokemon.name}</h2>
@@ -68,7 +62,7 @@ function PokemonDetail() {
               <Col md={6}>
                 <div className="w-100 p-3">
                   {pokemon.stats.map((stat) => (
-                    <div>
+                    <div key={stat.name}>
                     <p className="mb-1 fw-bold">{stat.name}</p>
                     <ProgressBar now={stat.base_stat} label={`${stat.base_stat}%`} className="w-50 mb-3" />
                     </div>
