@@ -3,8 +3,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 function DropDown() {
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Dropdown Button
+      <Dropdown.Toggle variant="Secondary" id="dropdown-basic">
+        Skills
       </Dropdown.Toggle>
 
       <Dropdown.Menu>

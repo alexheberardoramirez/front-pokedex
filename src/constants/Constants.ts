@@ -1,3 +1,4 @@
 export const PAGE = {
-  HOME: '/'
+  HOME: '/',
+  POKEMON: '/pokemon'
 } as const;

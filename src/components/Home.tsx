@@ -1,29 +1,45 @@
-import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
-import { Spinner } from 'react-bootstrap';
-import DropDown from './DropDown';
-import { PokemonSprite } from './PokemonSprite';
-
+import Button from "react-bootstrap/Button";
+import DropDown from "./DropDown";
+import { PokemonSprite } from "./PokemonSprite";
+import { PAGE } from "../constants/Constants";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    var movieURL = `${PAGE.POKEMON}`;
+    navigate(movieURL);
+  };
+
   return (
-    <Card style={{ width: '18rem' }}>
-      {/*<Card.Img variant="top" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png" />*/}
-      <PokemonSprite/>
+    <Card style={{ width: "18rem" }}>
+      <PokemonSprite />
       <Card.Body>
-        <Card.Title>Card Title</Card.Title>
         <Card.Text>
-          A strange seed was\nplanted on its\nback at birth.\fThe plant sprouts\nand grows with\nthis POKéMON.
+          A strange seed was\nplanted on its\nback at birth.\fThe plant
+          sprouts\nand grows with\nthis POKéMON.
         </Card.Text>
       </Card.Body>
       <ListGroup className="list-group-flush">
-        <ListGroup.Item>Category: </ListGroup.Item>
-        <ListGroup.Item>Mass: </ListGroup.Item>
-        <DropDown/>
+        <ListGroup.Item>Category: Fire</ListGroup.Item>
+        <ListGroup.Item>Mass: 15</ListGroup.Item>
+        <DropDown />
       </ListGroup>
       <Card.Body>
-        <Card.Link href="#">Pokemon Details</Card.Link>
-        <Card.Link href="#">Another Link</Card.Link>
+        <Button
+          variant="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            handleRedirect();
+          }}
+          className="text-decoration-none"
+        >
+          Pokemon Details
+        </Button>
+   
       </Card.Body>
     </Card>
   );

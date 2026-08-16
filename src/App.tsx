@@ -3,6 +3,7 @@ import { Button, Container, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import  Home  from "./components/Home"
+import PokemonDetail from './components/PokemonDetail';
 import { PAGE } from "./constants/Constants"
 
   function App() {
@@ -14,6 +15,7 @@ import { PAGE } from "./constants/Constants"
           <section id="center">
             <Routes>
               <Route path={PAGE.HOME} element={<Home/>} />
+              <Route path={`${PAGE.POKEMON}`} element={<PokemonDetail />} />
              {/*Home
               <Route path={PAGE.HOME} element={<Body moviesSegmented={moviesSegmented} />} />
               <Route path={`${PAGE.MOVIE}/:title/:id`} element={<WatchMovie />} />
