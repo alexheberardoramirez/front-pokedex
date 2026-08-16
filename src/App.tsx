@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import  Home  from "./components/Home"
 import { PAGE } from "./constants/Constants"
 
-function App() {
+  function App() {
 
 
   return (
