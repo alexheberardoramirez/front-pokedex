@@ -1,19 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Button, Container, Alert } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import  Home  from "./components/Home"
+import { PAGE } from "./constants/Constants"
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
-  <Container className="mt-5">
-      <Alert variant="success">
-        ¡Bootstrap está funcionando correctamente con TypeScript!
-      </Alert>
-      <Button variant="primary">Botón de Bootstrap</Button>
+    <Container className="mt-5">
+      <Router>
+          <section id="center">
+            <Routes>
+              <Route path={PAGE.HOME} element={<Home/>} />
+             {/*Home
+              <Route path={PAGE.HOME} element={<Body moviesSegmented={moviesSegmented} />} />
+              <Route path={`${PAGE.MOVIE}/:title/:id`} element={<WatchMovie />} />
+              <Route path={`${PAGE.CREATE_MOVIE}`} element={<CreateMovieForm />} />
+              */}
+            </Routes>
+          </section>
+       
+      </Router>
     </Container>
   )
 }
