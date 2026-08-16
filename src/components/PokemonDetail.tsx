@@ -5,52 +5,94 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { ProgressBar } from "react-bootstrap";
 import { ListGroup } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
+import pokemonService from "../services/PokemonService ";
+import { useParams } from "react-router-dom";
 
 function PokemonDetail() {
+  const [pokemon, setPokemon] = useState<PokemonResponseDTO>(
+    {} as PokemonResponseDTO,
+  );
+  
+  const { id, title } = useParams() as { id: string; title: string };
+
+  useEffect(() => {
+    onLandPokemonDetailsPage();
+  }, []);
+
+  const onLandPokemonDetailsPage = async (): Promise<void> => {
+    var getPokemon: PokemonResponseDTO = await pokemonService.getMovieById(id);
+
+    setPokemon(getPokemon);
+  };
+
+  console.log(pokemon)
+  if (Object.keys(pokemon).length === 0|| 
+    
+    // Condición 2: ¿Los sprites o la URL de la imagen principal son undefined?
+    !pokemon.sprites || !pokemon.sprites.frontShiny ||
+    
+    // Condición 3: ¿La lista de tipos es undefined o vino vacía (longitud 0)?
+    !pokemon.types || pokemon.types.length === 0 ||
+    
+    // Condición 4: ¿La lista de estadísticas es undefined o vino vacía?
+    !pokemon.stats || pokemon.stats.length === 0 ||
+    
+    // Condición 5: ¿La lista de habilidades es undefined o vino vacía?
+    !pokemon.abilities || pokemon.abilities.length === 0) {
+    return (
+      <Container className="text-center py-5">
+        <h2>Loading Data...</h2>
+      </Container>
+    );
+  }
+
+  // 2. EL RETURN PRINCIPAL (Solo se ejecuta si el Pokémon NO está vacío)
   return (
-    <Stack gap={2}>
-      <div className="p-2">
-        <Image
-          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"
-          fluid
-        />
-      </div>
-      <div className="p-2">
-        <p>
-          {" "}
-          A strange seed was\nplanted on its\nback at birth.\fThe plant
-          sprouts\nand grows with\nthis POKéMON.
-        </p>
-      </div>
-      <div className="p-2">
-        <Container>
-          <Row>
-            <Col>
-              <div className="w-100 p-3">
-                <p>hp</p>
-                <ProgressBar now={60} label={`${60}%`} className="w-25" />
-                <p>attack</p>
-                <ProgressBar now={20} label={`${60}%`} className="w-25" />
-                <p>defense</p>
-                <ProgressBar now={90} label={`${90}%`} className="w-25" />
-              </div>
-            </Col>
-            <Col>
-              <Stack gap={1}>
-                <div className="p-2">
-                  <ListGroup className="w-50 mx-auto mt-3">
-                    <ListGroup.Item>evolutionary lineage</ListGroup.Item>
-                    <ListGroup.Item>bulbasaur</ListGroup.Item>
-                    <ListGroup.Item>ivysaur</ListGroup.Item>
-                    <ListGroup.Item>venusaur</ListGroup.Item>
-                  </ListGroup>
+    <Container className="mt-4">
+      <h2 className="text-capitalize">{pokemon.name}</h2>
+      
+      <Stack gap={2}>
+        <div className="p-2 text-center">
+          <Image
+            src={pokemon.sprites?.frontShiny}
+            fluid
+            style={{ width: '120px', imageRendering: 'pixelated' }}
+          />
+        </div>
+        <p className="mb-1 fw-bold">{pokemon.flavorTextEntries[0].flavor_text}</p>
+        <div className="p-2">
+          <Container>
+            <Row>
+              <Col md={6}>
+                <div className="w-100 p-3">
+                  {pokemon.stats.map((stat) => (
+                    <div>
+                    <p className="mb-1 fw-bold">{stat.name}</p>
+                    <ProgressBar now={stat.base_stat} label={`${stat.base_stat}%`} className="w-50 mb-3" />
+                    </div>
+                    ))}
                 </div>
-              </Stack>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    </Stack>
+              </Col>
+              
+              <Col md={6}>
+                <Stack gap={1}>
+                  <div className="p-2">
+                    <ListGroup className="w-100 mt-3">
+                      <ListGroup.Item className="bg-light fw-bold">Evolutionary Lineage</ListGroup.Item>
+                      <ListGroup.Item>{pokemon.chain.name_one}</ListGroup.Item>
+                      <ListGroup.Item>{pokemon.chain.name_two}</ListGroup.Item>
+                      <ListGroup.Item>{pokemon.chain.name_three}</ListGroup.Item>
+                    </ListGroup>
+                  </div>
+                </Stack>
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      </Stack>
+    </Container>
   );
 }
 

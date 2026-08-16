@@ -12,9 +12,10 @@ interface PokemonSprites {
 interface CardProps {
     pokemonSprites: PokemonSprites;
     pokemonName: string;
+    pokemonId: number;
 }
 
-  function PokemonSprite({ pokemonSprites, pokemonName }: CardProps) {
+  function PokemonSprite({ pokemonSprites, pokemonName, pokemonId }: CardProps) {
     pokemonSprites
   const sprites: PokemonSprites = {
     backDefault:
@@ -48,9 +49,9 @@ interface CardProps {
 
     const navigate = useNavigate();
 
-  const handleRedirect = () => {
-    var movieURL = `${PAGE.POKEMON}`;
-    navigate(movieURL);
+const handleRedirect = (pokemonName: string, id: number) => {
+    var pokemonURL = `${PAGE.POKEMON}/${pokemonName}/${id}`;
+    navigate(pokemonURL);
   };
 
   return (
@@ -58,7 +59,7 @@ interface CardProps {
       href="#"
       onClick={(e) => {
         e.preventDefault();
-        handleRedirect();
+        handleRedirect(pokemonName, pokemonId);
       }}
       className="text-decoration-none"
     >

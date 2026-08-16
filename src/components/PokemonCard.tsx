@@ -14,14 +14,14 @@ interface CardProps {
 function PokemonCard({ pokemon }: CardProps) {
   const navigate = useNavigate();
 
-  const handleRedirect = () => {
-    var movieURL = `${PAGE.POKEMON}`;
-    navigate(movieURL);
+  const handleRedirect = (pokemonName: string, id: number) => {
+    var pokemonURL = `${PAGE.POKEMON}/${pokemonName}/${id}`;
+    navigate(pokemonURL);
   };
 
   return (
     <Card style={{ width: "18rem" }}>
-      <PokemonSprite pokemonSprites={pokemon.sprites}  pokemonName={pokemon.name}/>
+      <PokemonSprite pokemonSprites={pokemon.sprites} pokemonName={pokemon.name} pokemonId={pokemon.id}/>
       <Card.Body>
         <Card.Text>
           {pokemon.flavorTextEntries[0].flavor_text}
@@ -37,7 +37,7 @@ function PokemonCard({ pokemon }: CardProps) {
           variant="primary"
           onClick={(e) => {
             e.preventDefault();
-            handleRedirect();
+            handleRedirect(pokemon.name, pokemon.id);
           }}
           className="text-decoration-none"
         >

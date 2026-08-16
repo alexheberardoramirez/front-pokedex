@@ -5,11 +5,23 @@ import  Home  from "./components/Home"
 import PokemonDetail from './components/PokemonDetail';
 import PokemonNavBar from './components/PokemonNavBar';
 import { PAGE } from "./constants/Constants"
+import { useEffect, useState } from 'react';
+import pokemonService from './services/PokemonService '
+import type { PokemonResponseDTO } from "./interfaces/pokemon.ts";
 
 
   function App() {
 
+    const [pokemons, setPokemons] = useState<PokemonResponseDTO[]>([]);
 
+         useEffect(() => {
+        onLandHomePageGetPokemons('');
+      }, []);
+
+    const onLandHomePageGetPokemons = async (query: string): Promise<void> => {
+    var getPokemons: PokemonResponseDTO[] = await pokemonService.searchPokemons(query);
+    setPokemons(getPokemons);
+  };
 
   return (
     <Container className="mt-5">
@@ -18,8 +30,8 @@ import { PAGE } from "./constants/Constants"
           <section id="center">
             <PokemonNavBar/>
             <Routes>
-              <Route path={PAGE.HOME} element={<Home/>} />
-              <Route path={`${PAGE.POKEMON}`} element={<PokemonDetail />} />
+              <Route path={PAGE.HOME} element={<Home pokemons={pokemons}/>} />
+              <Route path={`${PAGE.POKEMON}/:title/:id`} element={<PokemonDetail />} />
              {/*Home
               <Route path={PAGE.HOME} element={<Body moviesSegmented={moviesSegmented} />} />
               <Route path={`${PAGE.MOVIE}/:title/:id`} element={<WatchMovie />} />

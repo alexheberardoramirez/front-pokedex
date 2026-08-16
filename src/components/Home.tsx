@@ -1,27 +1,15 @@
-import { useEffect, useState } from 'react';
-import pokemonService from '../services/PokemonService '
-import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PokemonCard from './PokemonCard';
+import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
 
-function Home() {
-    const [pokemons, setPokemons] = useState<PokemonResponseDTO[]>([]);
+interface BodyProps {
+    pokemons: PokemonResponseDTO[];
+}
 
-         useEffect(() => {
-        onLandHomePageGetPokemons('');
-      }, []);
+function Home({ pokemons }: BodyProps) {
 
-    const onLandHomePageGetPokemons = async (query: string): Promise<void> => {
-    var getPokemons: PokemonResponseDTO[] = await pokemonService.searchPokemons(query);
-
-    //var getSegmentedMovies: PokemonResponseDTO[][] = Util.segmentMovies(getMovies);
-
-    setPokemons(getPokemons);
-
-  };
-  console.log(pokemons)
   return (
         <Container fluid="md">
             <Row>
@@ -32,10 +20,6 @@ function Home() {
                 ))}
             </Row>
        </Container>
-
-
-
-
 
 
   );

@@ -24,11 +24,7 @@ export interface PokemonType {
 
 export interface Stats {
   base_stat: number;
-  effort: number;
-  stat: {
-    name: string;
-    url: string;
-  };
+  name: string;
 }
 
 export interface FlavorTextEntriesResponse {
@@ -45,12 +41,9 @@ export interface FlavorTextEntriesResponse {
 
 // Representación básica para la cadena de evolución (puedes hacerla más estricta si lo requieres)
 export interface ChainResponse {
-  is_baby: boolean;
-  species: {
-    name: string;
-    url: string;
-  };
-  evolves_to: ChainResponse[]; // Estructura recursiva para las evoluciones
+  name_one: string;
+  name_two: string;
+  name_three: string;
 }
 
 // 2. Interfaz Principal (Equivalente a tu public record)
