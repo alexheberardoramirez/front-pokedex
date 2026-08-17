@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Form, Button, Card, Row, Col, Container } from 'react-bootstrap';
 import { useEffect } from 'react';
 import pokemonService from '../services/PokemonService '
-import type { Stats, PokemonSprites, PokemonAbility, PokemonType, ChainResponse } from "../interfaces/pokemon.ts";
+import type { Stats, PokemonSprites, PokemonAbility, PokemonType, ChainResponse, PokemonResponseDTO } from "../interfaces/pokemon.ts";
 
 export function Create() {
     const [pokemons, setPokemons] = useState<PokemonRequestDTO[]>([]);
@@ -34,8 +34,6 @@ export function Create() {
   backShiny: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png'
 });
 
-console.log("formData")
-console.log(formData)
 const [abilities, setAbilities] = useState<PokemonAbility[]>([
   { name: 'overgrow' }
 ]);
@@ -166,21 +164,34 @@ const handleSpriteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
 
     try {
+
+        setFormData((prevData) => ({
+        ...prevData,
+        stats: stats
+        }));
+
+        setFormData((prevData) => ({
+        ...prevData,
+        abilities: abilities
+        }));
+
+       const responsePokemon = pokemonService.savePokemon(formData);
+
       // Enviamos el JSON al controlador de Spring Boot
-      const response = await fetch('http://localhost:8080/api/v1/pokemon', {
+      /*const response = await fetch('http://localhost:8080/api/v1/pokemon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData)
-      });
+      });*/
 
-      if (response.ok) {
+      if (responsePokemon !== null/*response.ok*/) {
         alert('¡Pokémon creado con éxito en la base de datos!');
         // Aquí puedes resetear el formulario o redirigir al usuario
       } else {
-        const errorData = await response.json();
-        alert(`Error del servidor: ${errorData.message || 'No se pudo guardar'}`);
+        //const errorData = await response.json();
+     //   alert(`Error del servidor: ${errorData.message || 'No se pudo guardar'}`);
       }
     } catch (error) {
       console.error('Error de red:', error);

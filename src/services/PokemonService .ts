@@ -46,6 +46,9 @@ const PokemonService  = {
     }
   },
     savePokemon: async (pokemon: PokemonRequestDTO): Promise<PokemonRequestDTO> => {
+
+   
+
     const urlBase = `${API_CONFIG.BASE_URL_POKEMON}`
 
     console.log("payload#######")
@@ -78,12 +81,12 @@ const PokemonService  = {
       }
     }
 
-    const responseMovie: PokemonResponseDTO = await response.json();
+    const responsePokemon: PokemonResponseDTO = await response.json();
   
-    console.log("responseMovie#######")
-    console.log(responseMovie)
-    
-    return responseMovie;
+    console.log("responsePokemon#######")
+    console.log(responsePokemon)
+
+    return responsePokemon;
   }
 };
 
