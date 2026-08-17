@@ -30,7 +30,7 @@ function PokemonCard({ pokemon }: CardProps) {
       <ListGroup className="list-group-flush">
         <ListGroup.Item>Category: {pokemon.types?.[0]?.type?.name || "None"}</ListGroup.Item>
         <ListGroup.Item>Mass: {pokemon.weight}</ListGroup.Item>
-        <DropDown />
+        <DropDown pokemon={pokemon}/>
       </ListGroup>
       <Card.Body>
         <Button

@@ -1,6 +1,11 @@
-import Dropdown from 'react-bootstrap/Dropdown';
+import Dropdown from "react-bootstrap/Dropdown";
+import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
 
-function DropDown() {
+interface BodyProps {
+  pokemon: PokemonResponseDTO;
+}
+
+function DropDown({ pokemon }: BodyProps) {
   return (
     <Dropdown>
       <Dropdown.Toggle variant="Secondary" id="dropdown-basic">
@@ -8,9 +13,11 @@ function DropDown() {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item>Action</Dropdown.Item>
-        <Dropdown.Item>Another action</Dropdown.Item>
-        <Dropdown.Item>Something else</Dropdown.Item>
+        {pokemon.abilities.map((ability) => (
+          <div key={ability.name}>
+            <Dropdown.Item>{ability.name}</Dropdown.Item>
+          </div>
+        ))}
       </Dropdown.Menu>
     </Dropdown>
   );

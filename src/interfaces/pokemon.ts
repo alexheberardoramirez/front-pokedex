@@ -6,12 +6,7 @@ export interface PokemonSprites {
 }
 
 export interface PokemonAbility {
-  ability: {
-    name: string;
-    url: string;
-  };
-  is_hidden: boolean;
-  slot: number;
+  name: string;
 }
 
 export interface PokemonType {
@@ -29,14 +24,6 @@ export interface Stats {
 
 export interface FlavorTextEntriesResponse {
   flavor_text: string;
-  language: {
-    name: string;
-    url: string;
-  };
-  version: {
-    name: string;
-    url: string;
-  };
 }
 
 // Representación básica para la cadena de evolución (puedes hacerla más estricta si lo requieres)
