@@ -10,11 +10,7 @@ export interface PokemonAbility {
 }
 
 export interface PokemonType {
-  slot: number;
-  type: {
-    name: string;
-    url: string;
-  };
+  name: string;
 }
 
 export interface Stats {
@@ -35,11 +31,11 @@ export interface ChainResponse {
 
 // 2. Interfaz Principal (Equivalente a tu public record)
 export interface PokemonResponseDTO {
-  id: number;          // Long en Java equivale a number en TS
+  id: number;
   name: string;
-  weight: number;      // int equivale a number en TS
+  weight: number;
   sprites: PokemonSprites;
-  abilities: PokemonAbility[]; // List<> equivale a arreglos [] en TS
+  abilities: PokemonAbility[];
   types: PokemonType[];
   stats: Stats[];
   flavorTextEntries: FlavorTextEntriesResponse[];
