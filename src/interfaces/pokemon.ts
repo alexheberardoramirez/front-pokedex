@@ -40,3 +40,15 @@ export interface PokemonResponseDTO {
   chain: ChainResponse;
   customName: string;
 }
+
+export interface PokemonRequestDTO {
+  name: string;
+  weight: number;
+  sprites: PokemonSprites;
+  abilities: PokemonAbility[];
+  types: PokemonType[];
+  stats: Stats[];
+  flavorTextEntries: FlavorTextEntriesResponse[];
+  chain: ChainResponse;
+  customName: string;
+}

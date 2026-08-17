@@ -22,7 +22,7 @@ function PokemonDetail() {
   }, []);
 
   const onLandPokemonDetailsPage = async (): Promise<void> => {
-    var getPokemon: PokemonResponseDTO = await pokemonService.getMovieById(id);
+    var getPokemon: PokemonResponseDTO = await pokemonService.getPokemonById(id);
 
     setPokemon(getPokemon);
   };

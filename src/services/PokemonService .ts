@@ -1,4 +1,4 @@
-import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
+import type { PokemonResponseDTO, PokemonRequestDTO } from "../interfaces/pokemon.ts";
 import { API_CONFIG } from "../constants/Constants.ts"
 
 const PokemonService  = {
@@ -25,7 +25,7 @@ const PokemonService  = {
     }
   },
 
-    getMovieById: async (id: string): Promise<PokemonResponseDTO> => {
+    getPokemonById: async (id: string): Promise<PokemonResponseDTO> => {
     try {
       const urlBase = `${API_CONFIG.BASE_URL_POKEMON}/${id}`
    
@@ -44,6 +44,43 @@ const PokemonService  = {
       console.error("Server error connection", error);
       return {} as PokemonResponseDTO;
     }
+  },
+    savePokemon: async (pokemon: PokemonRequestDTO): Promise<PokemonRequestDTO> => {
+    const urlBase = `${API_CONFIG.BASE_URL_POKEMON}`
+    console.log("urlBase#######")
+    console.log(urlBase)
+
+    //http://localhost:8080/api/v1/pokemon
+    //http://localhost:8080/api/v1/pokemon
+    console.log("payload#######")
+    console.log(pokemon)
+    const response = await fetch(urlBase, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', //
+      },
+      body: JSON.stringify(pokemon),
+    });
+    if (!response.ok) {
+      const errorData = await response.json()
+      const errorMessage = JSON.stringify(errorData);
+      if (errorMessage.includes('E11000')) {
+        const regex = /WriteError\{(code=\d+),\s*message='([^']+)',\s*details=\{([^}]*)\}\}/;
+        const coincidencia = errorMessage.match(regex) ?? (Object.assign(["", "", ""], { index: 0, input: "" }) as RegExpMatchArray);
+        const mensajeTxt = coincidencia[2];
+        const regexDetalle = /(title dup key:\s*\{[^}]+\})/;
+        const coincidenciaDetalle = mensajeTxt.match(regexDetalle);
+        const detalleClave = coincidenciaDetalle ? coincidenciaDetalle[1] : "";
+
+        throw new Error(detalleClave);
+      } else {
+        throw new Error('Error due Server Connection!');
+      }
+    }
+
+    const responseMovie: PokemonResponseDTO = await response.json();
+
+    return responseMovie;
   }
 };
 
