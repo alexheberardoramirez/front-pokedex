@@ -47,11 +47,7 @@ const PokemonService  = {
   },
     savePokemon: async (pokemon: PokemonRequestDTO): Promise<PokemonRequestDTO> => {
     const urlBase = `${API_CONFIG.BASE_URL_POKEMON}`
-    console.log("urlBase#######")
-    console.log(urlBase)
 
-    //http://localhost:8080/api/v1/pokemon
-    //http://localhost:8080/api/v1/pokemon
     console.log("payload#######")
     console.log(pokemon)
     const response = await fetch(urlBase, {
@@ -61,8 +57,12 @@ const PokemonService  = {
       },
       body: JSON.stringify(pokemon),
     });
+
+  
+
     if (!response.ok) {
       const errorData = await response.json()
+      
       const errorMessage = JSON.stringify(errorData);
       if (errorMessage.includes('E11000')) {
         const regex = /WriteError\{(code=\d+),\s*message='([^']+)',\s*details=\{([^}]*)\}\}/;
@@ -79,7 +79,10 @@ const PokemonService  = {
     }
 
     const responseMovie: PokemonResponseDTO = await response.json();
-
+  
+    console.log("responseMovie#######")
+    console.log(responseMovie)
+    
     return responseMovie;
   }
 };
