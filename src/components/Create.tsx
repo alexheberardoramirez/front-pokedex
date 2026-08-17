@@ -1,12 +1,10 @@
 import type { PokemonRequestDTO } from "../interfaces/pokemon.ts";
 import React, { useState } from 'react';
 import { Form, Button, Card, Row, Col, Container } from 'react-bootstrap';
-import { useEffect } from 'react';
 import pokemonService from '../services/PokemonService '
-import type { Stats, PokemonSprites, PokemonAbility, PokemonType, ChainResponse, PokemonResponseDTO } from "../interfaces/pokemon.ts";
+import type { Stats, PokemonSprites, PokemonAbility, PokemonType, ChainResponse } from "../interfaces/pokemon.ts";
 
 export function Create() {
-    const [pokemons, setPokemons] = useState<PokemonRequestDTO[]>([]);
   // 1. Inicializamos el estado con la estructura exacta del RequestDTO
   // Incluimos valores por defecto válidos para cumplir con los @NotNull y @NotEmpty de tu Java
   const [formData, setFormData] = useState<PokemonRequestDTO>({

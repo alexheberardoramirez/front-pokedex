@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "react-bootstrap";
 import { PAGE } from "../constants/Constants";
 import { useNavigate } from "react-router-dom";
