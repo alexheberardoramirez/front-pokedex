@@ -177,31 +177,17 @@ const handleSpriteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
        const responsePokemon = pokemonService.savePokemon(formData);
 
-      // Enviamos el JSON al controlador de Spring Boot
-      /*const response = await fetch('http://localhost:8080/api/v1/pokemon', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });*/
 
-      if (responsePokemon !== null/*response.ok*/) {
-        alert('¡Pokémon creado con éxito en la base de datos!');
-        // Aquí puedes resetear el formulario o redirigir al usuario
+      if (responsePokemon !== null) {
+        alert('Pokemon saved in db successfully');
       } else {
-        //const errorData = await response.json();
-     //   alert(`Error del servidor: ${errorData.message || 'No se pudo guardar'}`);
+        alert(`Server Error: Not able to save pokemon'}`);
       }
     } catch (error) {
       console.error('Error de red:', error);
-      alert('Hubo un problema de conexión con el backend.');
+      alert('Error in backend');
     }
   };
-
-    const saludar = () => {
-        pokemonService.savePokemon(formData);
-    };
 
 
   return (
@@ -543,7 +529,7 @@ const handleSpriteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
               {/* Botón de Envío */}
               <Col xs={12} className="text-end mt-4">
-                <Button type="submit" variant="success" className="px-4 w-100" onClick={saludar}>
+                <Button type="submit" variant="success" className="px-4 w-100" >
                   Guardar Pokémon en la Base de Datos
                 </Button>
               </Col>
