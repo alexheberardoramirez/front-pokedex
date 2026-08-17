@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Form, Button, Card, Row, Col, Container } from 'react-bootstrap';
 import { useEffect } from 'react';
 import pokemonService from '../services/PokemonService '
-import type { PokemonResponseDTO } from "../interfaces/pokemon.ts";
+import type { Stats, PokemonSprites, PokemonAbility, PokemonType, ChainResponse } from "../interfaces/pokemon.ts";
 
 export function Create() {
     const [pokemons, setPokemons] = useState<PokemonRequestDTO[]>([]);
@@ -23,9 +23,123 @@ export function Create() {
     abilities: [{ name: 'overgrow' }],
     types: [{ name: 'grass' }],
     stats: [{ base_stat: 45, name: "a", }],
-    flavorTextEntries: [{ flavor_text: "flavor" }],
+    flavorTextEntries: [{ flavor_text: "any kind of description " }],
     chain: {  name_one: 'a',name_two: 'b', name_three: 'c', }
   });
+
+  const [sprites, setSprites] = useState<PokemonSprites>({
+  frontDefault: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',
+  frontShiny: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',
+  backDefault: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',
+  backShiny: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png'
+});
+
+console.log("formData")
+console.log(formData)
+const [abilities, setAbilities] = useState<PokemonAbility[]>([
+  { name: 'overgrow' }
+]);
+const [inputAbility, setInputAbility] = useState<string>('');
+
+
+const [types, setTypes] = useState<PokemonType[]>([
+  { name: 'grass' } // Tu valor inicial por defecto
+]);
+
+// Estado temporal para el cuadro de texto
+const [inputType, setInputType] = useState<string>('');
+
+// Maneja lo que el usuario escribe en el input de tipo
+const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setInputType(e.target.value);
+};
+
+// Agrega el nuevo tipo al arreglo sin borrar los anteriores
+const handleAddType = () => {
+  if (!inputType.trim()) return; // Evita agregar si está vacío
+
+  const newType: PokemonType = {
+    name: inputType.trim().toLowerCase() // Guarda en minúsculas para estandarizar
+  };
+
+  // ACUMULA: Mantiene los anteriores y suma el nuevo
+  setTypes((prev) => [...prev, newType]);
+  
+  // Limpia el cuadro de texto
+  setInputType('');
+};
+
+// 1. Estado principal que se enviará al DTO de Java
+const [stats, setStats] = useState<Stats[]>([
+  { base_stat: 45, name: 'hp' } // Valor inicial por defecto para cumplir con el @NotEmpty
+]);
+
+// 2. Estados temporales para los dos campos del "borrador"
+const [inputStatName, setInputStatName] = useState<string>('hp'); // Iniciamos con un tipo común
+const [inputBaseStat, setInputBaseStat] = useState<number>(0);
+
+// 3. Función para acumular la estadística en el arreglo
+const handleAddStat = () => {
+  if (!inputStatName.trim() || inputBaseStat <= 0) return; // Validación básica
+
+  const newStat: Stats = {
+    base_stat: inputBaseStat,
+    name: inputStatName.trim().toLowerCase()
+  };
+
+  // ACUMULA: Mantiene los anteriores y agrega el nuevo objeto estructurado
+  setStats((prev) => [...prev, newStat]);
+
+  // Limpiamos los campos para la siguiente entrada
+  setInputBaseStat(0);
+};
+
+const [chain, setChain] = useState<ChainResponse>({
+  name_one: '',
+  name_two: '',
+  name_three: ''
+});
+
+const handleChainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+
+  setChain((prevChain) => ({
+    ...prevChain,
+    [name]: value // Actualiza dinámicamente name_one, name_two o name_three
+  }));
+};
+
+
+const handleAbilityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setInputAbility(e.target.value);
+};
+
+
+// Agrega la nueva habilidad al arreglo sin borrar las anteriores
+const handleAddAbility = () => {
+  if (!inputAbility.trim()) return; // No agrega si está vacío
+
+  const newAbility: PokemonAbility = {
+    name: inputAbility.trim().toLowerCase() // Formato limpio
+  };
+
+  // ACUMULA: Mantiene las anteriores (...prev) y agrega la nueva
+  setAbilities((prev) => [...prev, newAbility]);
+  
+  // Limpia el textbox para que escriba la siguiente
+  setInputAbility('');
+};
+
+
+const handleSpriteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+
+  setSprites((prev) => ({
+    ...prev,
+    [name]: value
+  }));
+};
+
 
   // Estado para capturar errores visuales en el formulario (HTML5 validation)
   const [validated, setValidated] = useState(false);
@@ -127,57 +241,53 @@ export function Create() {
                 </Form.Group>
               </Col>
 
-              {/* Campo: First Stripe (@NotNull int) */}
-              <Col xs={12}>
-              <h2>Sprites</h2>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">First Sprite *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="sprite1"
-                    value={formData.sprites.backDefault || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png'}
-                    onChange={handleChange}
-                    placeholder="Ej. https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Este Campo debe ser el link de una imagen.
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+           {/* 1. Input Sprite 2 */}
+                <Col xs={12} md={6}>
+                    <Form.Group controlId="formPokemonFrontDefault">
+                    <Form.Label className="fw-bold">Sprite 1 *</Form.Label>
+                    <Form.Control
+                        required
+                        type="text"
+                        name="frontDefault" // 👈 Debe llamarse igual que la llave del objeto
+                        value={sprites.frontDefault}
+                        onChange={handleSpriteChange} // 👈 Usamos la misma función
+                        placeholder="https://..."
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        Insert a valid HTTP image URL.
+                    </Form.Control.Feedback>
+                    </Form.Group>
+                </Col>
 
-            {/* Campo: Second Stripe (@NotNull int) */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Second Sprite *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="sprite2"
-                    value={formData.sprites.backShiny || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png'}
-                    onChange={handleChange}
-                    placeholder="Ej. https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Este Campo debe ser el link de una imagen.
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                {/* 2. Input Sprite 2 */}
+                <Col xs={12} md={6}>
+                    <Form.Group controlId="formPokemonFrontShiny">
+                    <Form.Label className="fw-bold">Sprite 2 *</Form.Label>
+                    <Form.Control
+                        required
+                        type="text"
+                        name="frontShiny" // 👈 Debe llamarse igual que la llave del objeto
+                        value={sprites.frontShiny}
+                        onChange={handleSpriteChange} // 👈 Usamos la misma función
+                        placeholder="https://..."
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        Insert a valid HTTP image URL.
+                    </Form.Control.Feedback>
+                    </Form.Group>
+                </Col>
 
             {/* Campo: Third Stripe (@NotNull int) */}
-              <Col xs={12}>
+              <Col xs={12}  md={6}>
                 <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Third Sprite *</Form.Label>
+                  <Form.Label className="fw-bold">Sprite 3 *</Form.Label>
                   <Form.Control
                     required
                     type="text"
-                    min="1"
-                    name="sprite3"
-                    value={formData.sprites.backShiny || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png'}
-                    onChange={handleChange}
-                    placeholder="Ej. https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png"
+                    name="backDefault"
+                    value={sprites.backDefault}
+                    onChange={handleSpriteChange}
+                    placeholder="https://..."
                   />
                   <Form.Control.Feedback type="invalid">
                     Este Campo debe ser el link de una imagen.
@@ -186,17 +296,16 @@ export function Create() {
               </Col>
 
             {/* Campo: Four Stripe (@NotNull int) */}
-              <Col xs={12}>
+              <Col xs={12} md={6}>
                 <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Four Sprite *</Form.Label>
+                  <Form.Label className="fw-bold">Sprite 4 *</Form.Label>
                   <Form.Control
                     required
                     type="text"
-                    min="1"
-                    name="sprite4"
-                    value={formData.sprites.backShiny || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png'}
-                    onChange={handleChange}
-                    placeholder="Ej. https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png"
+                    name="backShiny"
+                    value={sprites.backShiny}
+                    onChange={handleSpriteChange}
+                    placeholder="https://..."
                   />
                   <Form.Control.Feedback type="invalid">
                     Este Campo debe ser el link de una imagen.
@@ -204,199 +313,140 @@ export function Create() {
                 </Form.Group>
               </Col>
 
-              {/* Campo: Abilitie 1 */}
-              <Col xs={12}>
-              <h2>Abilities</h2>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Ability 1 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="ability1"
-                    value={formData.abilities[0].name || 'jump'}
-                    onChange={handleChange}
-                    placeholder="Ej. Jump"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a ability
-                  </Form.Control.Feedback>
+             <Col xs={12}>
+                <Form.Group controlId="formPokemonAbility" className="mb-3">
+                    <Form.Label className="fw-bold"> Add Abilities *</Form.Label>
+                    <div className="d-flex gap-2">
+                    <Form.Control
+                        type="text"
+                        placeholder="Ej. Jump"
+                        value={inputAbility}          // Conectado al estado del texto
+                        onChange={handleAbilityChange} // Actualiza el texto
+                        onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddAbility();     // Permite agregar presionando Enter
+                        }
+                        }}
+                    />
+                    <Button type="button" onClick={handleAddAbility}>
+                        Add
+                    </Button>
+                    </div>
                 </Form.Group>
-              </Col>
 
-              {/* Campo: Abilitie 2 */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Ability 2 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="ability2"
-                    value={formData.abilities[0].name || 'jump'}
-                    onChange={handleChange}
-                    placeholder="Ej. Jump"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a ability
-                  </Form.Control.Feedback>
+                {/* Visualizador de habilidades acumuladas (con su respectivo key único) */}
+                <div className="d-flex flex-wrap gap-2 mb-3">
+                    {abilities.map((ability) => (
+                    <span key={ability.name} className="badge bg-primary p-2">
+                        {ability.name}
+                    </span>
+                    ))}
+                </div>
+                </Col>
+  
+                <Col xs={12}>
+                <Form.Group controlId="formPokemonType" className="mb-3">
+                    <Form.Label className="fw-bold">Add Types *</Form.Label>
+                    <div className="d-flex gap-2">
+                    <Form.Control
+                        type="text"
+                        placeholder="Ej. Fire"
+                        value={inputType}          // Conectado al estado temporal del texto
+                        onChange={handleTypeChange} // Actualiza el texto en tiempo real
+                        onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddType();        // Agrega el tipo al presionar Enter
+                        }
+                        }}
+                    />
+                    <Button type="button" variant="secondary" onClick={handleAddType}>
+                        Add
+                    </Button>
+                    </div>
                 </Form.Group>
-              </Col>
 
-                    {/* Campo: Abilitie 3 */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Ability 3 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="ability3"
-                    value={formData.abilities[0].name || 'jump'}
-                    onChange={handleChange}
-                    placeholder="Ej. Jump"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a ability
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                {/* Visualizador de tipos acumulados en formato Badge (etiquetas) */}
+                <div className="d-flex flex-wrap gap-2 mb-3">
+                    {types.map((type) => (
+                    <span key={type.name} className="badge bg-success p-2 text-capitalize">
+                        {type.name}
+                    </span>
+                    ))}
+                </div>
+                </Col>
 
-              {/* Campo: Type 1 */}
-              <Col xs={12}>
-              <h2>Types</h2>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Type 1 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="type1"
-                    value={formData.abilities[0].name || 'fire'}
-                    onChange={handleChange}
-                    placeholder="Ej. fire"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a type
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
 
-              {/* Campo: Type 2 */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Type 2 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="type2"
-                    value={formData.abilities[0].name || 'fire'}
-                    onChange={handleChange}
-                    placeholder="Ej. fire"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a type
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                    <Col xs={12}>
+                    <Form.Group className="mb-3">
+                        <Form.Label className="fw-bold">Add Stats *</Form.Label>
+                        <Row className="g-2">
+                        
+                        {/* Selector o entrada para el nombre de la estadística */}
+                        <Col xs={6}>
+                            <Form.Select 
+                            value={inputStatName} 
+                            onChange={(e) => setInputStatName(e.target.value)}
+                            >
+                            <option value="hp">HP</option>
+                            <option value="attack">Attack</option>
+                            <option value="defense">Defense</option>
+                            <option value="special-attack">Sp. Atk</option>
+                            <option value="special-defense">Sp. Def</option>
+                            <option value="speed">Speed</option>
+                            </Form.Select>
+                        </Col>
 
-              {/* Campo: Type 3 */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Type 2 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="type3"
-                    value={formData.abilities[0].name || 'fire'}
-                    onChange={handleChange}
-                    placeholder="Ej. fire"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a type
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                        {/* Input numérico para el base_stat */}
+                        <Col xs={4}>
+                            <Form.Control
+                            type="number"
+                            placeholder="Value"
+                            min="1"
+                            value={inputBaseStat || ''}
+                            onChange={(e) => setInputBaseStat(parseInt(e.target.value) || 0)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleAddStat(); // Permite añadir rápido con Enter
+                                }
+                            }}
+                            />
+                        </Col>
 
-              {/* Campo: Stat 1 */}
-              <Col xs={12}>
-              <h2>Stats</h2>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Stat 1 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="stat1"
-                    value={formData.stats[0].base_stat || '90'}
-                    onChange={handleChange}
-                    placeholder="Ej. 90"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a state from 0 to 100
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                        {/* Botón para agregar */}
+                        <Col xs={2}>
+                            <Button 
+                            type="button" 
+                            variant="info" 
+                            className="w-100 text-white" 
+                            onClick={handleAddStat}
+                            >
+                            Add
+                            </Button>
+                        </Col>
 
-              {/* Campo: Stat Name 1 */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Stat Name 1 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="statName1"
-                    value={formData.stats[0].name || 'Hit'}
-                    onChange={handleChange}
-                    placeholder="Ej. hit"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a state name like hit
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                        </Row>
+                    </Form.Group>
 
-              {/* Campo: Stat 2 */}
-              <Col xs={12}>
-              <h2>Stats</h2>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Stat 2 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="stat2"
-                    value={formData.stats[0].base_stat || '90'}
-                    onChange={handleChange}
-                    placeholder="Ej. 90"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a state from 0 to 100
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
+                    {/* Visualizador de Estadísticas Acumuladas */}
+                    <div className="mb-3 p-2 bg-light rounded border">
+                        <span className="d-block small text-muted fw-bold mb-2">Current Stats:</span>
+                        {stats.length === 0 ? (
+                        <span className="text-secondary small">No stats added yet.</span>
+                        ) : (
+                        <div className="d-flex flex-wrap gap-2">
+                            {stats.map((st, index) => (
+                            <span key={index} className="badge bg-info p-2 text-capitalize">
+                                {st.name}: {st.base_stat}
+                            </span>
+                            ))}
+                        </div>
+                        )}
+                    </div>
+                    </Col>
 
-              {/* Campo: Stat Name 2 */}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Stat Name 2 *</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    min="1"
-                    name="statName2"
-                    value={formData.stats[0].name || 'Fast'}
-                    onChange={handleChange}
-                    placeholder="Ej. hit"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a state name like hit
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
 
               {/* Campo: description */}
               <Col xs={12}>
@@ -406,8 +456,8 @@ export function Create() {
                     required
                     type="text"
                     min="1"
-                    name="description"
-                    value={formData.stats[0].name || 'this its a legendary pokemon from season 5'}
+                    name="flavorTextEntries"
+                    value={formData.flavorTextEntries[0].flavor_text}
                     onChange={handleChange}
                     placeholder="Ej. this its a legendary pokemon from season 5"
                   />
@@ -416,64 +466,48 @@ export function Create() {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-
-              {/* Campo: Chain Linage 1*/}
-              <Col xs={12}>
-              <h2>Chain Linage</h2>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Chain Linage 1 *</Form.Label>
-                  <Form.Control
+                  {/* Evolución 1 */}
+                <Col md={4} xs={12}>
+                <Form.Group controlId="formChainOne" className="mb-3">
+                    <Form.Label className="fw-bold">Evolution 1 *</Form.Label>
+                    <Form.Control
                     required
                     type="text"
-                    min="1"
-                    name="chainlinage1"
-                    value={formData.chain.name_one || 'toddler'}
-                    onChange={handleChange}
-                    placeholder="Ej. toddler"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a chain linage
-                  </Form.Control.Feedback>
+                    name="name_one" // Coincide con la interfaz
+                    value={chain.name_one}
+                    onChange={handleChainChange}
+                    placeholder="Ej. Bulbasaur"
+                    />
                 </Form.Group>
-              </Col>
+                </Col>
 
-              {/* Campo: Chain Linage 2*/}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Chain Linage 2 *</Form.Label>
-                  <Form.Control
-                    required
+                {/* Evolución 2 */}
+                <Col md={4} xs={12}>
+                <Form.Group controlId="formChainTwo" className="mb-3">
+                    <Form.Label className="fw-bold">Evolution 2</Form.Label>
+                    <Form.Control
                     type="text"
-                    min="1"
-                    name="chainlinage2"
-                    value={formData.chain.name_one || 'kid'}
-                    onChange={handleChange}
-                    placeholder="Ej. kid"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a chain linage
-                  </Form.Control.Feedback>
+                    name="name_two" 
+                    value={chain.name_two}
+                    onChange={handleChainChange}
+                    placeholder="Ej. Ivysaur"
+                    />
                 </Form.Group>
-              </Col>
+                </Col>
 
-              {/* Campo: Chain Linage 2*/}
-              <Col xs={12}>
-                <Form.Group controlId="formPokemonWeight">
-                  <Form.Label className="fw-bold">Chain Linage 3 *</Form.Label>
-                  <Form.Control
-                    required
+                {/* Evolución 3 */}
+                <Col md={4} xs={12}>
+                <Form.Group controlId="formChainThree" className="mb-3">
+                    <Form.Label className="fw-bold">Evolution 3</Form.Label>
+                    <Form.Control
                     type="text"
-                    min="1"
-                    name="chainlinage3"
-                    value={formData.chain.name_one || 'kid'}
-                    onChange={handleChange}
-                    placeholder="Ej. kid"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    You must insert a chain linage
-                  </Form.Control.Feedback>
+                    name="name_three"
+                    value={chain.name_three}
+                    onChange={handleChainChange}
+                    placeholder="Ej. Venusaur"
+                    />
                 </Form.Group>
-              </Col>
+                </Col>
 
                {/* Campo: Custom Name */}
               <Col xs={12}>
