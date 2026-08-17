@@ -8,6 +8,7 @@ import { PAGE } from "./constants/Constants"
 import { useEffect, useState } from 'react';
 import pokemonService from './services/PokemonService '
 import type { PokemonResponseDTO } from "./interfaces/pokemon.ts";
+import Create from './components/Create.tsx';
 
 
   function App() {
@@ -32,11 +33,7 @@ import type { PokemonResponseDTO } from "./interfaces/pokemon.ts";
             <Routes>
               <Route path={PAGE.HOME} element={<Home pokemons={pokemons}/>} />
               <Route path={`${PAGE.POKEMON}/:title/:id`} element={<PokemonDetail />} />
-             {/*Home
-              <Route path={PAGE.HOME} element={<Body moviesSegmented={moviesSegmented} />} />
-              <Route path={`${PAGE.MOVIE}/:title/:id`} element={<WatchMovie />} />
-              <Route path={`${PAGE.CREATE_MOVIE}`} element={<CreateMovieForm />} />
-              */}
+              <Route path={PAGE.CREATE} element={<Create />} />
             </Routes>
           </section>
        
