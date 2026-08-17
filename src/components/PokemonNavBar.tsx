@@ -7,9 +7,8 @@ import { useNavigate } from "react-router-dom";
 function PokemonNavBar() {
   const navigate = useNavigate();
 
-  const handleRedirect = () => {
-    var movieURL = `${PAGE.HOME}`;
-    navigate(movieURL);
+  const handleRedirect = (page: string) => {
+    navigate(page);
   };
 
   return (
@@ -22,11 +21,20 @@ function PokemonNavBar() {
             <Nav.Link
               onClick={(e) => {
                 e.preventDefault();
-                handleRedirect();
+                handleRedirect(PAGE.HOME);
               }}
               className="text-decoration-none"
             >
               Home
+            </Nav.Link>
+            <Nav.Link
+              onClick={(e) => {
+                e.preventDefault();
+                handleRedirect(PAGE.CREATE);
+              }}
+              className="text-decoration-none"
+            >
+              Create
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

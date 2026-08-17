@@ -22,14 +22,12 @@ export interface FlavorTextEntriesResponse {
   flavor_text: string;
 }
 
-// Representación básica para la cadena de evolución (puedes hacerla más estricta si lo requieres)
 export interface ChainResponse {
   name_one: string;
   name_two: string;
   name_three: string;
 }
 
-// 2. Interfaz Principal (Equivalente a tu public record)
 export interface PokemonResponseDTO {
   id: number;
   name: string;

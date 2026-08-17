@@ -8,5 +8,6 @@ export const API_CONFIG = {
 
 export const PAGE = {
   HOME: '/',
+  CREATE: '/create',
   POKEMON: '/pokemon'
 } as const;
